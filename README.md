@@ -271,6 +271,12 @@ Limitations:
   - Ensure `SONAR_ORGANIZATION` matches your SonarCloud organization key.
   - Reconnect the GitHub repository in SonarCloud Administration if necessary.
 
+## Screenshots
+
+![alt text](image1.png)
+![alt text](image2.png)
+![alt text](image3.png)
+
 ## Reproducibility Checklist
 
 - [ ] Ensure `SNYK_TOKEN`, `SONAR_TOKEN`, `SONAR_ORGANIZATION`, and `SONAR_PROJECT_KEY` are present in repository secrets.
