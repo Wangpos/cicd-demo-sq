@@ -45,136 +45,260 @@ Configure these 4 secrets in your repository:
 
 ✅ **SonarCloud**: Code quality and security analysis  
 ✅ **Snyk**: Dependency vulnerability scanning  
-✅ **GitHub Actions**: Automated CI/CD pipeline  
+✅ **GitHub Actions**: Automated CI/CD pipeline
 
-## Results & Screenshots
+# CI/CD Demonstration: SonarCloud & Snyk Integration
 
-### 1. SonarCloud SAST Scan ✅
-**Workflow**: `sonarcloud.yml` | **Duration**: 1m 2s | **SAST Scan**: 58s
-
-![SonarCloud SAST Scan](image1.png)
-
-*Successful Static Application Security Testing scan integrated with GitHub Actions*
-
-### 2. Snyk Security Scan ✅  
-**Workflow**: `basic-security.yml` | **Duration**: 27s | **Security Scan**: 24s
-
-![Snyk Security Scan](image2.png)
-
-*Dependency vulnerability scanning with Snyk detecting potential security issues*
-
-### 3. SonarCloud Quality Dashboard ✅
-**Project**: cicd-demo | **Lines of Code**: 125 (XML, Java) | **Quality Gate**: Passed
-
-![SonarCloud Quality Dashboard](image3.png)
-
-**Quality Metrics:**
-- 🔒 **Security**: 0 issues (Grade A)
-- 🛠️ **Reliability**: 0 issues (Grade A)  
-- 📊 **Maintainability**: 3 issues (Grade A)
-- 🔍 **Security Hotspots**: 100% reviewed
-- 📈 **Code Coverage**: 93.3%
-- 📋 **Duplications**: 0.0%
-
-## Troubleshooting
-
-### SonarCloud Issues
-
-If you encounter `InvalidProtocolBufferException` or other SonarCloud errors:
-
-1. **Run the troubleshooting script**:
-   ```bash
-   ./scripts/sonar-troubleshoot.sh
-   ```
-
-2. **Manual troubleshooting steps**:
-   ```bash
-   # Clean build and cache
-   mvn clean
-   rm -rf ~/.sonar/cache/*
-   
-   # Build project step by step
-   mvn compile
-   mvn test
-   mvn jacoco:report
-   mvn sonar:sonar
-   ```
-
-3. **Common fixes**:
-   - Ensure your `SONAR_TOKEN` is valid and not expired
-   - Verify your organization name matches your SonarCloud account
-   - Make sure your project key is correct in both `pom.xml` and `sonar-project.properties`
-   - Check that your SonarCloud project exists and you have permissions
-
-### "Could not find a default branch" Error
-
-If you get: `Could not find a default branch for project with key '***'`
-
-**Solution Steps:**
-
-1. **Check SonarCloud Project Exists**:
-   - Go to [SonarCloud.io][sonarcloud]
-   - Verify your project appears in your project list
-   - If not, click "Analyze new project" and import from GitHub
-
-2. **Get Correct Project Key**:
-   - In SonarCloud → Your Project → Project Settings
-   - Copy the exact "Project Key"
-   - Update the `SONAR_PROJECT_KEY` secret in GitHub
-
-3. **Common Project Key Formats**:
-   - `Organization_repository-name` (with capital letter)
-   - `organization-suffix_repository-name` (with organization prefix)
-   - `repository-name` (simple name)
-
-4. **Verify GitHub Integration**:
-   - SonarCloud → Organization → Administration → GitHub Integration
-   - Ensure your repository is connected
-
-## ✅ Implementation Success
-
-This project successfully demonstrates:
-
-- **✅ Static Application Security Testing (SAST)** with SonarCloud
-- **✅ Dependency Vulnerability Scanning** with Snyk  
-- **✅ Automated Quality Gates** ensuring code quality standards
-- **✅ Continuous Integration/Continuous Deployment** pipeline
-- **✅ Security-First Development** approach with automated scanning
-
-### Key Achievements:
-- **Zero Security Vulnerabilities** detected
-- **High Code Coverage** at 93.3%
-- **Fast Pipeline Execution** (under 2 minutes)
-- **Automated Security Reviews** on every commit
-- **Quality Gate Compliance** with industry standards
-
-## Configuration
-
-**SonarCloud Settings:**
-- Organization: Configured via `SONAR_ORGANIZATION` secret
-- Project Key: Configured via `SONAR_PROJECT_KEY` secret
-- Quality Gate: **✅ PASSED**
-
-## Active Workflows
-
-| Workflow | Trigger | Purpose | Status |
-|----------|---------|---------|--------|
-| **sonarcloud.yml** | Push to main/master, PRs | SonarCloud SAST analysis | ✅ Active |
-| **basic-security.yml** | Push to main/master, PRs | Snyk dependency scanning | ✅ Active |  
-| **maven.yml** | Push to master, PRs | Build, test, and integrated security | ✅ Active |
-
-## 🔗 Links
-
-- **GitHub Repository**: [View Repository][repo]
-- **GitHub Actions**: [View Workflows][actions]
-- **SonarCloud Project**: [View Dashboard][sonarcloud-project]
+Author: Repository maintainers
+Repository: `cicd-demo` (Java / Maven)
 
 ---
 
-<!-- Reference Links -->
-[repo]: https://github.com/KeldenPDorji/cicd-demo_sq
-[actions]: https://github.com/KeldenPDorji/cicd-demo_sq/actions
-[sonarcloud-project]: https://sonarcloud.io/project/overview?id=KeldenPDorji_cicd-demo_sq
-[sonarcloud]: https://sonarcloud.io
-[snyk]: https://snyk.io
-# cicd-demo-sq
+## Abstract
+
+This repository demonstrates the integration of automated code-quality and dependency-security tools—SonarCloud and Snyk—into a continuous integration pipeline implemented with GitHub Actions. The project shows how to configure analysis, enforce quality gates, and reproduce scans locally for research or classroom exercises.
+
+## Introduction
+
+Automated static analysis and dependency scanning are essential components of modern software engineering education and practice. This project provides a compact, reproducible example that combines:
+
+- SonarCloud for static application security testing (SAST) and code-quality metrics.
+- Snyk for dependency vulnerability analysis.
+- GitHub Actions to orchestrate CI workflows for build, test, and security checks.
+
+The target artifact is a Maven-based Java application located under `src/` and configured by `pom.xml`.
+
+## Objectives
+
+- Demonstrate how to configure and run SonarCloud and Snyk within GitHub Actions.
+- Provide reproducible instructions for running scans locally and in CI.
+- Document common troubleshooting steps and configuration pitfalls.
+
+## Methods
+
+**Repository layout (relevant files):**
+
+- `pom.xml` — Maven configuration (build, tests, JaCoCo, Sonar properties)
+- `.github/workflows/sonarcloud.yml` — SonarCloud analysis workflow
+- `.github/workflows/basic-security.yml` — Snyk scanning workflow
+- `src/` — Application source
+- `scripts/` — Helper scripts (e.g., `sonar-troubleshoot.sh`)
+
+**CI Configuration:**
+
+Workflows are implemented as GitHub Actions YAML files and rely on repository secrets for authentication (see Reproducibility). SonarCloud analysis runs after build and test phases to collect coverage and static analysis results. Snyk executes a dependency scan to detect known vulnerabilities.
+
+## Materials and Tools
+
+- GitHub Actions (CI orchestration)
+- SonarCloud (SAST, quality gates)
+- Snyk (dependency vulnerability scanning)
+- Maven (build lifecycle, test runner)
+- Java 11+ (runtime for build/test)
+
+## Experimental Setup (How to reproduce)
+
+1. Add the following repository secrets on GitHub (Settings → Secrets and variables → Actions):
+
+   - `SNYK_TOKEN` — API token from Snyk
+   - `SONAR_TOKEN` — Analysis token from SonarCloud
+   - `SONAR_ORGANIZATION` — SonarCloud organization key
+   - `SONAR_PROJECT_KEY` — SonarCloud project key
+
+2. Trigger a workflow by pushing a commit or opening a pull request. The workflows of interest are:
+
+   - `sonarcloud.yml` — performs build, test, coverage, and SonarCloud analysis
+   - `basic-security.yml` — performs Snyk dependency scanning
+   - `maven.yml` — builds and tests the project
+
+3. Reproduce locally (recommended for debugging):
+
+   ```bash
+   # Build and run tests
+   ./mvnw clean test
+
+   # Generate coverage report
+   ./mvnw jacoco:report
+
+   # Run Sonar analysis locally (requires SONAR_TOKEN and correct project configuration)
+   ./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+   ```
+
+## Results (Summary)
+
+- SonarCloud: Quality gate passed; high code coverage (>90% reported in CI) and no substantial security issues in scanned code.
+- Snyk: Dependency scan executed in CI and reported dependency advisories (if any) in the workflow logs.
+
+Detailed dashboards (quality metrics, traces, and historical data) are available in the SonarCloud and Snyk web consoles once the repository is connected and the tokens are configured.
+
+## Discussion
+
+The integrated pipeline shows how automated tools can enforce quality and security checks early in the development lifecycle. Combining SonarCloud (for SAST and code health) with Snyk (for dependency risks) provides complementary viewpoints that together reduce risk and maintainability debt.
+
+Limitations:
+
+- Some SonarCloud errors (e.g., protocol/connection issues) can stem from misconfigured tokens or incorrect project keys.
+- CI metrics depend on the completeness of unit tests and the accuracy of JaCoCo coverage reports.
+
+## Troubleshooting (Concise)
+
+- If SonarCloud reports protocol or authentication errors:
+
+  ```bash
+  # Try a clean local build and clear Sonar cache
+  ./mvnw clean
+  rm -rf ~/.sonar/cache/*
+  ./mvnw compile test jacoco:report sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+  ```
+
+- If CI reports "Could not find a default branch" or project-key mismatch:
+
+  - Verify the exact `SONAR_PROJECT_KEY` configured in SonarCloud (Project Settings → General Settings).
+  - Ensure `SONAR_ORGANIZATION` matches your SonarCloud organization key.
+  - Reconnect the GitHub repository in SonarCloud Administration if necessary.
+
+## Reproducibility Checklist
+
+- [ ] Ensure `SNYK_TOKEN`, `SONAR_TOKEN`, `SONAR_ORGANIZATION`, and `SONAR_PROJECT_KEY` are present in repository secrets.
+
+# CI/CD Demonstration: SonarCloud & Snyk Integration
+
+Author: Repository maintainers
+Repository: `cicd-demo` (Java / Maven)
+
+---
+
+## Abstract
+
+This repository demonstrates the integration of automated code-quality and dependency-security tools—SonarCloud and Snyk—into a continuous integration pipeline implemented with GitHub Actions. The project shows how to configure analysis, enforce quality gates, and reproduce scans locally for research or classroom exercises.
+
+## Introduction
+
+Automated static analysis and dependency scanning are essential components of modern software engineering education and practice. This project provides a compact, reproducible example that combines:
+
+- SonarCloud for static application security testing (SAST) and code-quality metrics.
+- Snyk for dependency vulnerability analysis.
+- GitHub Actions to orchestrate CI workflows for build, test, and security checks.
+
+The target artifact is a Maven-based Java application located under `src/` and configured by `pom.xml`.
+
+## Objectives
+
+- Demonstrate how to configure and run SonarCloud and Snyk within GitHub Actions.
+- Provide reproducible instructions for running scans locally and in CI.
+- Document common troubleshooting steps and configuration pitfalls.
+
+## Methods
+
+**Repository layout (relevant files):**
+
+- `pom.xml` — Maven configuration (build, tests, JaCoCo, Sonar properties)
+- `.github/workflows/sonarcloud.yml` — SonarCloud analysis workflow
+- `.github/workflows/basic-security.yml` — Snyk scanning workflow
+- `src/` — Application source
+- `scripts/` — Helper scripts (e.g., `sonar-troubleshoot.sh`)
+
+**CI Configuration:**
+
+Workflows are implemented as GitHub Actions YAML files and rely on repository secrets for authentication (see Reproducibility). SonarCloud analysis runs after build and test phases to collect coverage and static analysis results. Snyk executes a dependency scan to detect known vulnerabilities.
+
+## Materials and Tools
+
+- GitHub Actions (CI orchestration)
+- SonarCloud (SAST, quality gates)
+- Snyk (dependency vulnerability scanning)
+- Maven (build lifecycle, test runner)
+- Java 11+ (runtime for build/test)
+
+## Experimental Setup (How to reproduce)
+
+1.  Add the following repository secrets on GitHub (Settings → Secrets and variables → Actions):
+
+    - `SNYK_TOKEN` — API token from Snyk
+    - `SONAR_TOKEN` — Analysis token from SonarCloud
+    - `SONAR_ORGANIZATION` — SonarCloud organization key
+    - `SONAR_PROJECT_KEY` — SonarCloud project key
+
+2.  Trigger a workflow by pushing a commit or opening a pull request. The workflows of interest are:
+
+    - `sonarcloud.yml` — performs build, test, coverage, and SonarCloud analysis
+    - `basic-security.yml` — performs Snyk dependency scanning
+    - `maven.yml` — builds and tests the project
+
+3.  Reproduce locally (recommended for debugging):
+
+    ```bash
+    # Build and run tests
+    ./mvnw clean test
+
+    # Generate coverage report
+    ./mvnw jacoco:report
+
+    # Run Sonar analysis locally (requires SONAR_TOKEN and correct project configuration)
+    ./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+    ```
+
+## Results (Summary)
+
+- SonarCloud: Quality gate passed; high code coverage (>90% reported in CI) and no substantial security issues in scanned code.
+- Snyk: Dependency scan executed in CI and reported dependency advisories (if any) in the workflow logs.
+
+Detailed dashboards (quality metrics, traces, and historical data) are available in the SonarCloud and Snyk web consoles once the repository is connected and the tokens are configured.
+
+## Discussion
+
+The integrated pipeline shows how automated tools can enforce quality and security checks early in the development lifecycle. Combining SonarCloud (for SAST and code health) with Snyk (for dependency risks) provides complementary viewpoints that together reduce risk and maintainability debt.
+
+Limitations:
+
+- Some SonarCloud errors (e.g., protocol/connection issues) can stem from misconfigured tokens or incorrect project keys.
+- CI metrics depend on the completeness of unit tests and the accuracy of JaCoCo coverage reports.
+
+## Troubleshooting (Concise)
+
+- If SonarCloud reports protocol or authentication errors:
+
+  ```bash
+  # Try a clean local build and clear Sonar cache
+  ./mvnw clean
+  rm -rf ~/.sonar/cache/*
+  ./mvnw compile test jacoco:report sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+  ```
+
+- If CI reports "Could not find a default branch" or project-key mismatch:
+
+  - Verify the exact `SONAR_PROJECT_KEY` configured in SonarCloud (Project Settings → General Settings).
+  - Ensure `SONAR_ORGANIZATION` matches your SonarCloud organization key.
+  - Reconnect the GitHub repository in SonarCloud Administration if necessary.
+
+## Reproducibility Checklist
+
+- [ ] Ensure `SNYK_TOKEN`, `SONAR_TOKEN`, `SONAR_ORGANIZATION`, and `SONAR_PROJECT_KEY` are present in repository secrets.
+- [ ] Confirm GitHub Actions workflows exist under `.github/workflows/`.
+- [ ] Validate `pom.xml` contains JaCoCo and Sonar configuration entries required by the workflows.
+
+## Appendix A — Useful Commands
+
+```bash
+# Run full build and tests
+./mvnw clean verify
+
+# Run only tests
+./mvnw test
+
+# Run Sonar analysis (requires SONAR_TOKEN)
+./mvnw sonar:sonar -Dsonar.login=${SONAR_TOKEN}
+
+# Run the troubleshooting helper script
+./scripts/sonar-troubleshoot.sh
+```
+
+## Acknowledgements
+
+This material was prepared for instructional purposes and demonstrates CI/CD best practices combining SonarCloud and Snyk with GitHub Actions.
+
+## References
+
+- SonarCloud: https://sonarcloud.io
+- Snyk: https://snyk.io
+- GitHub Actions: https://docs.github.com/en/actions
